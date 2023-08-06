@@ -1,0 +1,19 @@
+
+tqdm
+matplotlib
+timm
+pyqt5
+
+# facenet 
+numpy
+# requests==2.25.1
+torch 
+torchvision 
+Pillow==9.4.0
+opencv-python>=4.1.0
+# scipy==1.9.1
+# pandas==1.4.4
+# coverage==4.5.3
+# jupyter>=1.0.0
+# tensorboard>=1.14.0
+# future>=0.17.1

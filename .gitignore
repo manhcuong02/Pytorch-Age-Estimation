@@ -1,0 +1,12 @@
+
+# virtual environment
+venv/
+.env
+
+# jupyter notebook
+.ipynb
+
+__pycache__/
+
+# weights
+weights/
