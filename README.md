@@ -1,7 +1,10 @@
 # Gender Classification and Age Estimation 
 ![](Images/dataset-card.png)
 
-Repository này là một dự án deep learning để ước tính độ tuổi và dự đoán giới tính bằng cách sử dụng bộ dữ liệu [UTKFace](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace) có sẵn trên kaggle cùng với [MTCNN](https://github.com/timesler/facenet-pytorch). Mục tiêu của dự án này là có thể dự đoán được tuổi và giới tính của mọi người trong ảnh trong trạng thái tốt.
+ available on Kaggle along with MTCNN (Multi-task Cascaded Convolutional Networks) for face detection
+This repository represents a deep learning project aimed at estimating age and predicting gender using the [UTKFace dataset](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace)available on Kaggle along with [MTCNN](https://github.com/timesler/facenet-pytorch) (Multi-task Cascaded Convolutional Networks) for face detection. The primary objective of this project is to accurately predict the age and gender of individuals depicted in images in the best case scenario.
+
+
 
 ## Training Insights
 
