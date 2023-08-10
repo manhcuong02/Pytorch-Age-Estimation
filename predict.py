@@ -1,5 +1,5 @@
 from Facenet.models.mtcnn import MTCNN
-from GenderAndAge.models import Model
+from AgeNet.models import Model
 import torch
 from torchvision import transforms as T
 from PIL import Image

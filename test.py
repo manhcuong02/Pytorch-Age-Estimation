@@ -1,4 +1,4 @@
-from GenderAndAge.models import *
+from AgeNet.models import *
 from torch import nn
 
 class Model(nn.Module):

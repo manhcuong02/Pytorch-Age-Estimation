@@ -4,9 +4,8 @@ venv/
 .env
 
 # jupyter notebook
-*.ipynb
-
 __pycache__/
+*.ipynb 
 
 # weights
 test_weights/
