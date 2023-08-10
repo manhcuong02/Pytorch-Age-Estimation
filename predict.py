@@ -1,13 +1,16 @@
 from Facenet.models.mtcnn import MTCNN
-from GenderAge.model import GenderAgePrediction
+from GenderAndAge.models import Model
 import torch
 from torchvision import transforms as T
 from PIL import Image
 import numpy as np
 import cv2
+import matplotlib.pyplot as plt
+import os
+import argparse
 
-class Model():
-    def __init__(self, face_size = 64, weights = None, device = 'cpu', tpx = 640):  
+class AgeEstimator():
+    def __init__(self, face_size = 64, weights = None, device = 'cpu', tpx = 500):  
         
         self.thickness_per_pixels = tpx
         
@@ -26,9 +29,10 @@ class Model():
             
         self.facenet_model = MTCNN(device = self.device)
         
-        self.gender_age_model = GenderAgePrediction().to(self.device)
+        self.model = Model().to(self.device)
+        self.model.eval()
         if weights:
-            self.gender_age_model.load_state_dict(torch.load(weights, map_location=torch.device('cpu')))
+            self.model.load_state_dict(torch.load(weights, map_location=torch.device('cpu')))
             print('Weights loaded successfully from path:', weights)
             print('====================================================')
         
@@ -78,7 +82,7 @@ class Model():
         for box in bboxes:
             box = np.clip(box, 0, np.inf).astype(np.uint32)
             
-            padding = image_shape[1] * 5 / self.thickness_per_pixels
+            padding = max(image_shape) * 5 / self.thickness_per_pixels
             
             padding = int(max(padding, 10))
             
@@ -90,21 +94,62 @@ class Model():
         
         face_images = torch.stack(face_images, dim = 0)
         
-        genders, ages = self.gender_age_model(face_images)
+        genders, ages = self.model(face_images)
         
         genders = torch.round(genders)
-        ages = torch.round(ages)
-        
+
+        ages = torch.round(ages).long()
+                
         for i, box in enumerate(bboxes): 
             box = np.clip(box, 0, np.inf).astype(np.uint32)
             
-            thickness = image_shape[1]/self.thickness_per_pixels
+            thickness = max(image_shape)/self.thickness_per_pixels
             
             thickness = int(max(thickness, 1))
             
-            label = 'Male' if genders[i] == 0 else "Female"
+            label = 'Man' if genders[i] == 0 else "Woman"
             label += f": {ages[i].item()}years old"
             self.plot_box_and_label(ndarray_image, thickness, box, label, color = (255, 0, 0))
             
         return ndarray_image
+
+def main(image_path, weights = "weights/weights.pt", face_size = 64, device = 'cpu', save_result = False, imshow = False):
+    print(image_path, weights)
+
+    model = AgeEstimator(weights = weights, face_size = face_size, device = device)
+    predicted_image = model.predict(image_path)
+    
+    if save_result:
+        if not os.path.exists("runs"):
+            os.makedirs("runs")
         
+        if not os.path.exists(os.path.join("runs", "predict")):
+            os.makedirs(os.path.join("runs", "predict"))
+                
+        exp = os.listdir(os.path.join("runs", 'predict'))
+        if len(exp) == 0:
+            last_exp = os.path.join("runs", 'predict', 'exp1')
+            os.mkdir(last_exp)
+        else:
+            exp_list = [int(i[3:]) for i in exp]
+            last_exp = os.path.join("runs", 'predict', 'exp' + str(int(exp_list[-1]) + 1))
+            os.mkdir(last_exp)
+        plt.imsave(os.path.join(last_exp, "results.jpg"), predicted_image)
+    
+    if imshow:
+        plt.figure(figsize = (10,8))
+        plt.imshow(predicted_image)
+        plt.show()
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--image-path', '--filename', '--image-path', type = str, required=True, help = "Input file path")
+    parser.add_argument('--weights', type = str, default = 'weights/weights.pt', help = "weights path")
+    parser.add_argument('--face-size', type = int, default = 64, help = "Face size")
+    parser.add_argument('--device', type = str, default = 'cpu', help = "cuda or cpu")
+    parser.add_argument('--save-result', action = 'store_true', default = False, help = "Save predicted image")
+    parser.add_argument('--imshow', '--view-img', '--img-show', action = 'store_true', default = False, help = "Show predicted image")
+    
+    opt = parser.parse_args()
+    
+    main(**vars(opt))

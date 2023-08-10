@@ -3,7 +3,7 @@ from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QVBoxLayout, QHBoxLay
 from PyQt5.QtGui import QPixmap, QPainter, QPen, QFont
 from PyQt5.QtCore import Qt, QPoint, QRect
 import os
-from predict import Model
+from predict import AgeEstimator
 from PIL import Image, ImageQt
 import numpy as np
 import cv2 as cv
@@ -31,11 +31,12 @@ class ImageViewer(QWidget):
         self.weights = None
         
         # model
-        self.model = Model(weights = self.weights, device = 'cuda')
+        self.model = AgeEstimator(weights = self.weights, device = 'cuda')
         
         # 
         self.in_image = QLabel(self)
         self.in_image.setGeometry(QRect(50, 200, 700, 400))
+        
         self.img_path = None
         # 
         self.out_image = QLabel(self)
@@ -55,7 +56,7 @@ class ImageViewer(QWidget):
         else:
             self.weights = weights_path
         
-        self.model = Model(weights = self.weights, device = 'cuda')
+        self.model = AgeEstimator(weights = self.weights, device = 'cuda')
         
     def get_weights_path(self):
         weights_filename = os.listdir("weights")
