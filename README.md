@@ -81,7 +81,11 @@ python3 main.py
 Below are some promising outcomes of this project; however, there still exist inaccuracies in age and gender recognition in certain cases.
 
 <img src="results/trang.jpg" height="400">  <img src="results/thanh.jpg" height="400">  <img src="results/thanh4.jpg" height="400"> <img src="results/ngoc2.jpg" height="400">
+<<<<<<< HEAD
 <img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="250"> <img src="results/europe.jpg" height="250"> <img src="results/spain.jpg" height="250">
 <img src="results/asian_family.jpg" height="250">  <img src="results/europe.png" height="250">
 
+=======
+<img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="275"> <img src="results/europe.jpg" height="275">
+>>>>>>> f1a78cdb5184bf6286ed3dd6a161cc02b40c38e0
 
