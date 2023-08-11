@@ -1,11 +1,8 @@
+__pycache__/
 
 # virtual environment
 venv/
 .env
-
-# jupyter notebook
-__pycache__/
-*.ipynb 
 
 # weights
 test_weights/
