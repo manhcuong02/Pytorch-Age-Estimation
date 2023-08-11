@@ -1,5 +1,8 @@
 # Gender Classification and Age Estimation 
-![](Images/dataset-card.png)
+
+<p align="center">
+ <img src="Images/dataset-card.png" width="400">
+</p>
 
 This repository represents a deep learning project aimed at estimating age and predicting gender using the [UTKFace dataset](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace)available on Kaggle along with [MTCNN](https://github.com/timesler/facenet-pytorch) (Multi-task Cascaded Convolutional Networks) for face detection. The primary objective of this project is to accurately predict the age and gender of individuals depicted in images in the best case scenario.
 
@@ -76,5 +79,6 @@ python3 main.py
 
 ## Results
 Dưới đây là một số kết quả của project này:
-![](results/)
 
+<img src="results/trang.jpg" height="400">  <img src="results/thanh.jpg" height="400">  <img src="results/thanh4.jpg" height="400"> <img src="results/ngoc2.jpg" height="400">
+<img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="250"> <img src="results/europe.jpg" height="250">
