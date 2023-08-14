@@ -52,9 +52,9 @@ The visual representation and detailed insights highlight the model's strengths 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/manhcuong02/Age-Estimation.git
+git clone https://github.com/manhcuong02/Pytorch-Age-Estimation.git
 
-cd Age-Estimation
+cd Pytorch-Age-Estimation
 ```
 
 2. Install the required dependencies:
