@@ -4,7 +4,7 @@
  <img src="Images/dataset-card.png" width="400">
 </p>
 
-This repository represents a deep learning project aimed at estimating age and predicting gender using the [UTKFace dataset](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace)available on Kaggle along with [MTCNN](https://github.com/timesler/facenet-pytorch) (Multi-task Cascaded Convolutional Networks) for face detection. The primary objective of this project is to accurately predict the age and gender of individuals depicted in images in the best case scenario.
+This repository represents a deep learning project aimed at estimating age and predicting gender using the [UTKFace dataset](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace) available on Kaggle along with [MTCNN](https://github.com/timesler/facenet-pytorch) (Multi-task Cascaded Convolutional Networks) for face detection. The primary objective of this project is to accurately predict the age and gender of individuals depicted in images in the best case scenario.
 
 ## Project Components
 This project comprises two main sections: "Facenet" and "AgeNet" (custom names).
@@ -52,9 +52,9 @@ The visual representation and detailed insights highlight the model's strengths 
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/manhcuong02/Age-Estimation.git
+git clone https://github.com/manhcuong02/Pytorch-Age-Estimation.git
 
-cd Age-Estimation
+cd Pytorch-Age-Estimation
 ```
 
 2. Install the required dependencies:
@@ -81,11 +81,8 @@ python3 main.py
 Below are some promising outcomes of this project; however, there still exist inaccuracies in age and gender recognition in certain cases.
 
 <img src="results/trang.jpg" height="400">  <img src="results/thanh.jpg" height="400">  <img src="results/thanh4.jpg" height="400"> <img src="results/ngoc2.jpg" height="400">
-<<<<<<< HEAD
-<img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="250"> <img src="results/europe.jpg" height="250"> <img src="results/spain.jpg" height="250">
-<img src="results/asian_family.jpg" height="250">  <img src="results/europe.png" height="250">
+<img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="265"> <img src="results/europe.jpg" height="265">
+<img src="results/asian_family.jpg" height="350">  <img src="results/europe.png" height="350">
 
-=======
-<img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="275"> <img src="results/europe.jpg" height="275">
->>>>>>> f1a78cdb5184bf6286ed3dd6a161cc02b40c38e0
+
 

@@ -14,9 +14,6 @@ class ImageViewer(QWidget):
 
         self.window_heigt = 800
         self.window_width = 1600
-        
-        self.img_width = 700
-        self.img_height = 400
                 
         # Thiết lập tiêu đề và kích thước của cửa sổ
         self.setWindowTitle('Image Viewer')
@@ -27,7 +24,7 @@ class ImageViewer(QWidget):
         self.mode = None
         self.select_mode = self.add_ComboBox(50,50, ["Please select a mode", "Webcam", "Image"], event = self.on_mode_selected)
         
-        self.select_weight = self.add_ComboBox(250,50, ["Please select a weights"] + self.get_weights_path(), event = self.on_weights_selected)    
+        self.select_weight = self.add_ComboBox(500,50, ["Please select a weights"] + self.get_weights_path(), event = self.on_weights_selected)    
         self.weights = None
         
         # model
@@ -35,12 +32,10 @@ class ImageViewer(QWidget):
         
         # 
         self.in_image = QLabel(self)
-        self.in_image.setGeometry(QRect(50, 200, 700, 400))
         
         self.img_path = None
         # 
         self.out_image = QLabel(self)
-        self.out_image.setGeometry(QRect(850, 200, 700, 400))
         self.predicted_image = None
         
         self.webcam_button = self.add_button("Connect to Webcam", 300, 700, 190, 50, self.Connect_to_Webcam, mode = 'hide')
@@ -69,7 +64,7 @@ class ImageViewer(QWidget):
     def paintEvent(self, event):
         painter = QPainter(self)
         painter.setPen(QPen(Qt.gray, 3))
-        painter.drawLine(800,200,800,600)
+        painter.drawLine(800,150,800,650)
 
     def on_mode_selected(self, index):
         self.mode = self.select_mode.itemText(index)
@@ -114,6 +109,7 @@ class ImageViewer(QWidget):
             qt_img = ImageQt.ImageQt(qt_img)
             pixmap = QPixmap.fromImage(qt_img)
             width, height = self.rescale_image(self.predicted_image.shape[1], self.predicted_image.shape[0])
+            self.out_image.setGeometry(QRect(1200 - width //2 , 150, width, height))
             self.out_image.setPixmap(pixmap.scaled(width, height))    
             
     def save_result(self):
@@ -146,11 +142,7 @@ class ImageViewer(QWidget):
         return button
         
     def rescale_image(self, width, height):
-        if width < height:
-            return int(width * self.img_height / height), self.img_height
-
-        else:
-            return self.img_width, int(height * self.img_width/width)
+        return int(width * 500 / height), 500
 
     def selectImage(self):
         # Hiển thị hộp thoại chọn tệp ảnh và lấy tên tệp ảnh được chọn
@@ -160,9 +152,9 @@ class ImageViewer(QWidget):
             self.img_path = file_name
             # Tải ảnh từ tệp và hiển thị nó trên QLabel
             pixmap = QPixmap(file_name)
-            
-            width, height = self.rescale_image(self.in_image.width(), self.in_image.height())
-            
+            img = cv.imread(file_name)
+            width, height = self.rescale_image(img.shape[1], img.shape[0])
+            self.in_image.setGeometry(QRect(400 - width //2 , 150, width, height))
             self.in_image.setPixmap(pixmap.scaled(width, height))        
 
 if __name__ == '__main__':

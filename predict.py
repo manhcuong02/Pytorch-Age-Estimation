@@ -103,9 +103,9 @@ class AgeEstimator():
         for i, box in enumerate(bboxes): 
             box = np.clip(box, 0, np.inf).astype(np.uint32)
             
-            thickness = max(image_shape)/self.thickness_per_pixels
+            thickness = max(image_shape)/400
             
-            thickness = int(max(thickness, 1))
+            thickness = int(max(np.ceil(thickness), 1))
             
             label = 'Man' if genders[i] == 0 else "Woman"
             label += f": {ages[i].item()}years old"
