@@ -8,7 +8,7 @@ from PIL import Image, ImageQt
 import numpy as np
 import cv2 as cv
 
-class ImageViewer(QWidget):
+class AgeEstimationGUI(QWidget):
     def __init__(self):
         super().__init__()
 
@@ -16,7 +16,7 @@ class ImageViewer(QWidget):
         self.window_width = 1600
                 
         # Thiết lập tiêu đề và kích thước của cửa sổ
-        self.setWindowTitle('Image Viewer')
+        self.setWindowTitle('Age Estimation GUI')
         self.setGeometry(100, 100, self.window_width, self.window_heigt)
         self.setFixedSize(self.window_width, self.window_heigt)
         
@@ -120,7 +120,7 @@ class ImageViewer(QWidget):
             file_path, _ = QFileDialog.getSaveFileName(self, "Save Result", "", "Images (*.png *.jpg)")
             if file_path:
                 cv.imwrite(file_path, img)
-        
+         
     def add_button(self, title, x, y, w, h, event = None, font_size = 10, mode = 'show'):
         assert mode in ['hide', 'show']
         button = QPushButton(self)
@@ -159,6 +159,6 @@ class ImageViewer(QWidget):
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    window = ImageViewer()
+    window = AgeEstimationGUI()
     window.show()
     sys.exit(app.exec_())
