@@ -64,7 +64,8 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-1. Download the pretrained model weights from [ggdrive](https://drive.google.com/file/d/1_JNOsSl9kY082VVs5TcU1aoRcCGN1cBh/view?usp=sharing).
+1. Download weights of the pretrained model from [ggdrive](https://drive.google.com/file/d/1_JNOsSl9kY082VVs5TcU1aoRcCGN1cBh/view?usp=sharing), and then add them to the 'weights' directory.
+
 2. Run the age estimation script:
 
 ```bash
