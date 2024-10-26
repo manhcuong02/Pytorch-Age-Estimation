@@ -1,5 +1,7 @@
 # Gender Classification and Age Estimation 
 
+> This repository is currently provided primarily for research and educational purposes. As such, the model and code structure are my own design and may not always yield optimal results. For production-level applications, I recommend exploring more modern and efficient architectures specifically tailored for face embedding tasks. Thanks. This repository may be rewritten in the future to incorporate such improvements.
+
 <p align="center">
  <img src="Images/dataset-card.png" width="400">
 </p>
