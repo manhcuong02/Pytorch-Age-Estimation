@@ -1,19 +1,25 @@
-from Facenet.models.mtcnn import MTCNN
-from AgeNet.models import Model
-import torch
-from torchvision import transforms as T
-from PIL import Image
-import numpy as np
-import cv2 as cv
 import os
+
+import cv2 as cv
 import matplotlib.pyplot as plt
+import numpy as np
+import torch
+from PIL import Image
+from torchvision import transforms as T
+
+from AgeNet.models import Model
+from Facenet.models.mtcnn import MTCNN
 
 
-class AgeEstimator():
-    def __init__(self, face_size=64, weights=None, device='cpu', tpx=500):  
+class AgeEstimator:
+    def __init__(self, face_size=64, weights=None, device="cpu", tpx=500):
         self.thickness_per_pixels = tpx
-        self.face_size = (face_size, face_size) if isinstance(face_size, int) else face_size
-        self.device = torch.device(device if device == 'cuda' and torch.cuda.is_available() else 'cpu')
+        self.face_size = (
+            (face_size, face_size) if isinstance(face_size, int) else face_size
+        )
+        self.device = torch.device(
+            device if device == "cuda" and torch.cuda.is_available() else "cpu"
+        )
 
         # Initialize models
         self.facenet_model = MTCNN(device=self.device)
@@ -22,20 +28,24 @@ class AgeEstimator():
 
         # Load weights if provided
         if weights:
-            self.model.load_state_dict(torch.load(weights, map_location='cpu'))
+            self.model.load_state_dict(torch.load(weights, map_location="cpu"))
             print(f"Weights loaded successfully from path: {weights}")
-            print('=' * 60)
+            print("=" * 60)
 
     def transform(self, image):
         """Transform input face image for the model."""
-        return T.Compose([
-            T.Resize(self.face_size),
-            T.ToTensor(),
-            T.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5])
-        ])(image)
+        return T.Compose(
+            [
+                T.Resize(self.face_size),
+                T.ToTensor(),
+                T.Normalize(mean=[0.5, 0.5, 0.5], std=[0.5, 0.5, 0.5]),
+            ]
+        )(image)
 
     @staticmethod
-    def plot_box_and_label(image, lw, box, label='', color=(128, 128, 128), txt_color=(255, 255, 255)):
+    def plot_box_and_label(
+        image, lw, box, label="", color=(128, 128, 128), txt_color=(255, 255, 255)
+    ):
         """Add a labeled bounding box to the image."""
         p1, p2 = (int(box[0]), int(box[1])), (int(box[2]), int(box[3]))
         cv.rectangle(image, p1, p2, color, thickness=lw, lineType=cv.LINE_AA)
@@ -45,17 +55,20 @@ class AgeEstimator():
             outside = p1[1] - h - 3 >= 0
             p2 = p1[0] + w, p1[1] - h - 3 if outside else p1[1] + h + 3
             cv.rectangle(image, p1, p2, color, -1, cv.LINE_AA)
-            cv.putText(image, label, (p1[0], p1[1] - 2 if outside else p1[1] + h + 2), 0, lw / 3, txt_color,
-                       thickness=tf, lineType=cv.LINE_AA)
+            cv.putText(
+                image,
+                label,
+                (p1[0], p1[1] - 2 if outside else p1[1] + h + 2),
+                0,
+                lw / 3,
+                txt_color,
+                thickness=tf,
+                lineType=cv.LINE_AA,
+            )
 
     def padding_face(self, box, padding=10):
         """Apply padding to bounding box."""
-        return [
-            box[0] - padding,
-            box[1] - padding,
-            box[2] + padding,
-            box[3] + padding
-        ]
+        return [box[0] - padding, box[1] - padding, box[2] + padding, box[3] + padding]
 
     def predict_frame(self, frame, min_prob=0.9):
         """Process a single video frame for real-time predictions."""
@@ -84,8 +97,16 @@ class AgeEstimator():
 
         for i, box in enumerate(bboxes):
             box = np.clip(box, 0, np.inf).astype(np.uint32)
-            label = f"{'Man' if genders[i] == 0 else 'Woman'}: {ages[i].item()} years old"
-            self.plot_box_and_label(ndarray_image, max(ndarray_image.shape) // 400, box, label, color=(255, 0, 0))
+            label = (
+                f"{'Man' if genders[i] == 0 else 'Woman'}: {ages[i].item()} years old"
+            )
+            self.plot_box_and_label(
+                ndarray_image,
+                max(ndarray_image.shape) // 400,
+                box,
+                label,
+                color=(255, 0, 0),
+            )
 
         return ndarray_image
 
@@ -117,20 +138,32 @@ class AgeEstimator():
         genders = torch.round(genders)
         ages = torch.round(ages).long()
 
-        for i, box in enumerate(bboxes): 
+        for i, box in enumerate(bboxes):
             box = np.clip(box, 0, np.inf).astype(np.uint32)
             thickness = max(image_shape) // 400
             thickness = int(max(np.ceil(thickness), 1))
-            label = f"{'Man' if genders[i] == 0 else 'Woman'}: {ages[i].item()} years old"
-            self.plot_box_and_label(ndarray_image, thickness, box, label, color=(255, 0, 0))
+            label = (
+                f"{'Man' if genders[i] == 0 else 'Woman'}: {ages[i].item()} years old"
+            )
+            self.plot_box_and_label(
+                ndarray_image, thickness, box, label, color=(255, 0, 0)
+            )
 
         return ndarray_image
 
-def main(image_path, weights="weights/weights.pt", face_size=64, device='cpu', save_result=False, imshow=False):
+
+def main(
+    image_path,
+    weights="weights/weights.pt",
+    face_size=64,
+    device="cpu",
+    save_result=False,
+    imshow=False,
+):
     print(f"Processing image: {image_path}")
     model = AgeEstimator(weights=weights, face_size=face_size, device=device)
     predicted_image = model.predict(image_path)
-    
+
     if save_result:
         save_dir = os.path.join("runs", "predict")
         os.makedirs(save_dir, exist_ok=True)
@@ -144,15 +177,37 @@ def main(image_path, weights="weights/weights.pt", face_size=64, device='cpu', s
         plt.axis("off")
         plt.show()
 
+
 if __name__ == "__main__":
     import argparse
+
     parser = argparse.ArgumentParser()
-    parser.add_argument('--image-path', type=str, required=True, help="Path to the input image.")
-    parser.add_argument('--weights', type=str, default='weights/weights.pt', help="Path to the model weights.")
-    parser.add_argument('--face-size', type=int, default=64, help="Face size for the model.")
-    parser.add_argument('--device', type=str, default='cpu', help="Device to run the model on ('cpu' or 'cuda').")
-    parser.add_argument('--save-result', action='store_true', help="Save the resulting image with annotations.")
-    parser.add_argument('--imshow', action='store_true', help="Display the resulting image.")
+    parser.add_argument(
+        "--image-path", type=str, required=True, help="Path to the input image."
+    )
+    parser.add_argument(
+        "--weights",
+        type=str,
+        default="weights/weights.pt",
+        help="Path to the model weights.",
+    )
+    parser.add_argument(
+        "--face-size", type=int, default=64, help="Face size for the model."
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="cpu",
+        help="Device to run the model on ('cpu' or 'cuda').",
+    )
+    parser.add_argument(
+        "--save-result",
+        action="store_true",
+        help="Save the resulting image with annotations.",
+    )
+    parser.add_argument(
+        "--imshow", action="store_true", help="Display the resulting image."
+    )
     args = parser.parse_args()
 
     main(**vars(args))

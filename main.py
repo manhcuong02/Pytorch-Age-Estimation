@@ -1,12 +1,21 @@
-import sys
-from PyQt5.QtWidgets import QApplication, QWidget, QLabel, QPushButton, QFileDialog, QComboBox
-from PyQt5.QtGui import QPixmap, QImage, QFont
-from PyQt5.QtCore import Qt, QTimer, QRect
 import os
-from predict import AgeEstimator
-from PIL import Image, ImageQt
-import numpy as np
+import sys
+
 import cv2 as cv
+import numpy as np
+from PIL import Image, ImageQt
+
+from predict import AgeEstimator
+from PyQt5.QtCore import QRect, Qt, QTimer
+from PyQt5.QtGui import QFont, QImage, QPixmap
+from PyQt5.QtWidgets import (
+    QApplication,
+    QComboBox,
+    QFileDialog,
+    QLabel,
+    QPushButton,
+    QWidget,
+)
 
 
 class AgeEstimationGUI(QWidget):
@@ -17,13 +26,13 @@ class AgeEstimationGUI(QWidget):
         self.window_width = 1600
 
         # Setup window
-        self.setWindowTitle('Age Estimation GUI')
+        self.setWindowTitle("Age Estimation GUI")
         self.setGeometry(100, 100, self.window_width, self.window_height)
         self.setFixedSize(self.window_width, self.window_height)
 
         # Initialize variables
         self.weights = None
-        self.model = AgeEstimator(weights=self.weights, device='cuda')
+        self.model = AgeEstimator(weights=self.weights, device="cuda")
         self.timer = QTimer()
         self.cap = None
         self.webcam_active = False
@@ -40,15 +49,33 @@ class AgeEstimationGUI(QWidget):
         self.out_image.hide()
 
         # Combobox
-        self.select_mode = self.add_ComboBox(50, 50, ["Please select a mode", "Webcam", "Image"], event=self.on_mode_selected)
-        self.select_weight = self.add_ComboBox(500, 50, ["Please select a weights"] + self.get_weights_path(), event=self.on_weights_selected)
+        self.select_mode = self.add_ComboBox(
+            50,
+            50,
+            ["Please select a mode", "Webcam", "Image"],
+            event=self.on_mode_selected,
+        )
+        self.select_weight = self.add_ComboBox(
+            500,
+            50,
+            ["Please select a weights"] + self.get_weights_path(),
+            event=self.on_weights_selected,
+        )
 
         # Buttons
-        self.webcam_button = self.add_button("Connect to Webcam", 300, 700, 190, 50, self.Connect_to_Webcam, mode='hide')
-        self.select_image_button = self.add_button("Select Image", 320, 700, 150, 50, self.selectImage, mode='hide')
+        self.webcam_button = self.add_button(
+            "Connect to Webcam", 300, 700, 190, 50, self.Connect_to_Webcam, mode="hide"
+        )
+        self.select_image_button = self.add_button(
+            "Select Image", 320, 700, 150, 50, self.selectImage, mode="hide"
+        )
         self.exit_button = self.add_button("Exit", 1280, 700, 150, 50, exit)
-        self.save_button = self.add_button("Save Result", 960, 700, 150, 50, self.save_result, mode='hide')
-        self.predict_button = self.add_button("Predict Image", 640, 700, 150, 50, self.predict, mode='hide')
+        self.save_button = self.add_button(
+            "Save Result", 960, 700, 150, 50, self.save_result, mode="hide"
+        )
+        self.predict_button = self.add_button(
+            "Predict Image", 640, 700, 150, 50, self.predict, mode="hide"
+        )
 
     def on_weights_selected(self, index):
         weights_path = self.select_weight.itemText(index)
@@ -57,11 +84,13 @@ class AgeEstimationGUI(QWidget):
         else:
             self.weights = weights_path
 
-        self.model = AgeEstimator(weights=self.weights, device='cuda')
+        self.model = AgeEstimator(weights=self.weights, device="cuda")
 
     def get_weights_path(self):
         weights_filename = os.listdir("weights")
-        weights_path = [os.path.join(os.getcwd(), "weights", i) for i in weights_filename]
+        weights_path = [
+            os.path.join(os.getcwd(), "weights", i) for i in weights_filename
+        ]
         return weights_path
 
     def Connect_to_Webcam(self):
@@ -104,7 +133,13 @@ class AgeEstimationGUI(QWidget):
             # Convert processed frame to QPixmap
             height, width, channel = processed_frame.shape
             bytes_per_line = 3 * width
-            q_img = QImage(processed_frame.data, width, height, bytes_per_line, QImage.Format_RGB888)
+            q_img = QImage(
+                processed_frame.data,
+                width,
+                height,
+                bytes_per_line,
+                QImage.Format_RGB888,
+            )
             pixmap = QPixmap.fromImage(q_img)
 
             # Update QLabel to show the processed frame
@@ -150,10 +185,12 @@ class AgeEstimationGUI(QWidget):
     def predict(self):
         if self.img_path:
             self.predicted_image = self.model.predict(self.img_path)
-            qt_img = Image.fromarray(self.predicted_image, mode='RGB')
+            qt_img = Image.fromarray(self.predicted_image, mode="RGB")
             qt_img = ImageQt.ImageQt(qt_img)
             pixmap = QPixmap.fromImage(qt_img)
-            width, height = self.rescale_image(self.predicted_image.shape[1], self.predicted_image.shape[0])
+            width, height = self.rescale_image(
+                self.predicted_image.shape[1], self.predicted_image.shape[0]
+            )
             self.out_image.setGeometry(QRect(1200 - width // 2, 150, width, height))
             self.out_image.setPixmap(pixmap.scaled(width, height))
             self.out_image.show()  # Show QLabel for output
@@ -161,7 +198,9 @@ class AgeEstimationGUI(QWidget):
     def save_result(self):
         if self.predicted_image is not None:
             img = cv.cvtColor(self.predicted_image, cv.COLOR_RGB2BGR)
-            file_path, _ = QFileDialog.getSaveFileName(self, "Save Result", "", "Images (*.png *.jpg)")
+            file_path, _ = QFileDialog.getSaveFileName(
+                self, "Save Result", "", "Images (*.png *.jpg)"
+            )
             if file_path:
                 cv.imwrite(file_path, img)
 
@@ -177,8 +216,8 @@ class AgeEstimationGUI(QWidget):
             combo.currentIndexChanged.connect(event)
         return combo
 
-    def add_button(self, title, x, y, w, h, event=None, font_size=10, mode='show'):
-        assert mode in ['hide', 'show']
+    def add_button(self, title, x, y, w, h, event=None, font_size=10, mode="show"):
+        assert mode in ["hide", "show"]
         button = QPushButton(self)
         button.setText(title)
         button.move(x, y)
@@ -186,7 +225,7 @@ class AgeEstimationGUI(QWidget):
         font = QFont()
         font.setPointSize(font_size)
         button.setFont(font)
-        if mode == 'show':
+        if mode == "show":
             button.show()
         else:
             button.hide()
@@ -198,7 +237,12 @@ class AgeEstimationGUI(QWidget):
         return int(width * 500 / height), 500
 
     def selectImage(self):
-        file_name, _ = QFileDialog.getOpenFileName(self, 'Select Image', '', 'Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)')
+        file_name, _ = QFileDialog.getOpenFileName(
+            self,
+            "Select Image",
+            "",
+            "Image Files (*.png *.jpg *.jpeg *.bmp);;All Files (*)",
+        )
         if file_name:
             self.img_path = file_name
             pixmap = QPixmap(file_name)
@@ -209,7 +253,7 @@ class AgeEstimationGUI(QWidget):
             self.in_image.show()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = AgeEstimationGUI()
     window.show()
