@@ -9,6 +9,9 @@
 
 This repository represents a deep learning project aimed at estimating age and predicting gender using the [UTKFace dataset](https://www.kaggle.com/datasets/jangedoo/utkface-new?select=UTKFace) available on Kaggle along with [MTCNN](https://github.com/timesler/facenet-pytorch) (Multi-task Cascaded Convolutional Networks) for face detection. The primary objective of this project is to accurately predict the age and gender of individuals depicted in images in the best case scenario.
 
+## Update
+- 7/12/2024: Added a GUI using PyQt5. Thank you for the contribution from [vanboven073](https://github.com/vanboven073).
+
 ## Project Components
 This project comprises two main sections: "Facenet" and "AgeNet" (custom names).
  
@@ -75,7 +78,7 @@ pip install -r requirements.txt
 python3 predict.py --image-path your_path --weights weights_path --face-size 64 --device cpu --save-result --imshow   
 ```
 
-3. Using the PyQt5 Interface (coming soon):
+3. Using the PyQt5 Interface:
 
 ```bash
 python3 main.py
@@ -87,6 +90,3 @@ Below are some promising outcomes of this project; however, there still exist in
 <img src="results/trang.jpg" height="400">  <img src="results/thanh.jpg" height="400">  <img src="results/thanh4.jpg" height="400"> <img src="results/ngoc2.jpg" height="400">
 <img src="results/american_family.jpg" height="300"> <img src="results/argentina.jpg" height="300"> <img src="results/spain.jpg" height="265"> <img src="results/europe.jpg" height="265">
 <img src="results/asian_family.jpg" height="350">  <img src="results/europe.png" height="350">
-
-
-
